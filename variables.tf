@@ -1,11 +1,5 @@
-variable "region" {
-  description = "AWS region"
+variable "default_suffix" {
+  description = "Used to label all the things"
   type        = string
-  default     = "eu-north-1"
-}
-
-variable "gitlab_runner_registration_token" {
-  description = "The GitLab Runner registration token"
-  type        = string
-  sensitive   = true
+  default     = "tes-global"
 }
