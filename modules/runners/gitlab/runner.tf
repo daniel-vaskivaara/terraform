@@ -1,3 +1,17 @@
+terraform {
+  required_providers {
+    kubectl = {
+      source  = "gavinbunney/kubectl"
+      version = ">= 1.7.0"
+    }
+
+    helm = {
+      source = "hashicorp/helm"
+      version = "~> 2.14.1"
+    }
+  }
+}
+
 data "aws_eks_cluster" "example" {
   name = var.default_suffix
 }
@@ -19,6 +33,12 @@ provider "helm" {
     cluster_ca_certificate = base64decode(data.aws_eks_cluster.example.certificate_authority[0].data)
     token                  = data.aws_eks_cluster_auth.example.token
   }
+}
+
+provider "kubectl" {
+  host                   = data.aws_eks_cluster.example.endpoint
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.example.certificate_authority[0].data)
+  token                  = data.aws_eks_cluster_auth.example.token
 }
 
 resource "helm_release" "gitlab_runner" {
@@ -157,4 +177,14 @@ resource "kubernetes_horizontal_pod_autoscaler_v2" "gitlab_runner_hpa" {
       }
     }
   }
+}
+
+resource "kubectl_manifest" "gitlab_runner_role" {
+  yaml_body = file("${path.module}/manifests/role.yml")
+  depends_on = [helm_release.gitlab_runner]
+}
+
+resource "kubectl_manifest" "gitlab_runner_role_binding" {
+  yaml_body = file("${path.module}/manifests/roleBinding.yml")
+  depends_on = [helm_release.gitlab_runner]
 }

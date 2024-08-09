@@ -1,0 +1,11 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sRequiredUnprivileged
+metadata:
+  name: gitlab-runners-unprivileged
+  namespace: opa
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+    namespaces: ["gitlab-runners"]

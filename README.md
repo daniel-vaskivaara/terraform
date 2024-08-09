@@ -1,7 +1,10 @@
 # platform-tf-gitlab-runners
 
 ## description
-  Sample configuration for having a GitLab custom runner pool in EKS 
+  Sample configuration for having a GitLab custom runner pool in EKS. Two sample OPA policies have been created which force non-priviledged runners in the gitlab-runners namespace, as well as the K8s best practice of having at least one label associated with manifests.
+
+## disclaimer
+  As the word sample implies, this is not to be considered a production-ready template, but rather a proof of concept.
 
 ## Pre-requisites:
   - aws cli (ensure logged in via `aws sso login` or similar)
@@ -20,4 +23,4 @@
  - update local .kubeconfig file via:
    `aws eks update-kubeconfig --name tes-global-v01 --region eu-north-1`
  - `terraform apply -target=module.gitlab_runners` 
- <!-- -target=module.opa` -->
+ - WiP: `terraform apply --target=module.opa`

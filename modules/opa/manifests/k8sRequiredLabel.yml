@@ -1,0 +1,13 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sRequiredLabels
+metadata:
+  name: gitlab-runners-required-labels
+  namespace: opa
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+    namespaces: ["gitlab-runners"]
+  parameters:
+    labels: ["gitlab-runner"]
