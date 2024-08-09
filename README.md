@@ -10,9 +10,19 @@
   - aws cli (ensure logged in via `aws sso login` or similar)
   - kubectl
   - terraform cli (>=1.3)
-  - set the runner token secret either via local env:
-    `export TF_VAR_gitlab_runner_registration_token="secret-token"`
-    or by adding `gitlab_runner_registration_token="secret-token"` to a terraform.tfvars file in the repo root (.gitignore will ensure it is not added to version control)
+  - set GitLab runner token and GitLab server address (if different than https://gitlab.com):
+
+    example via local environment (Linux/MacOS):
+    ```
+      export TF_VAR_gitlab_runner_registration_token="keep_it_secret-keep_it_safe"
+      export TF_VAR_gitlab_server="https://gitlab.com"
+    ```
+
+    example of adding to terraform.tfvars file in repo root (.gitignore will ensure it is not added to version control)
+    ```
+    gitlab_runner_registration_token = "glrt-random-char-sequence-from-gitlab"
+    gitlab_server = "https://gitlab.com"
+    ```
 
 ## Recommended
   - Some sort of K8s visualization tool, for example [k9s](https://github.com/derailed/k9s)
@@ -21,6 +31,6 @@
  - `terraform init`
  - `terraform apply -target=module.eks`
  - update local .kubeconfig file via:
-   `aws eks update-kubeconfig --name tes-global-v01 --region eu-north-1`
+   `aws eks update-kubeconfig --name tes-global --region <region_close_to_GitLab_instance>`
  - `terraform apply -target=module.gitlab_runners` 
  - WiP: `terraform apply --target=module.opa`

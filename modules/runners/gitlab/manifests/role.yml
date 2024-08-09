@@ -2,9 +2,8 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   namespace: gitlab-runners
-  name: gitlab-runner-secrets-manager
+  name: gitlab-runner
 rules:
 - apiGroups: [""]
   resources: ["secrets", "pods", "pods/exec", "pods/attach"]
-  # verbs: ["create", "delete", "get", "list", "watch", "update"]
   verbs: ["*"]
