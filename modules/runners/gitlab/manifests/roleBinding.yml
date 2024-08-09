@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: gitlab-runner-secrets-manager-binding
+  namespace: gitlab-runners
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: gitlab-runners
+roleRef:
+  kind: Role
+  name: gitlab-runner-secrets-manager
+  apiGroup: rbac.authorization.k8s.io

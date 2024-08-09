@@ -16,4 +16,10 @@ module "gitlab_runners" {
   source = "./modules/runners/gitlab"
   default_suffix = var.default_suffix
   gitlab_runner_registration_token = var.gitlab_runner_registration_token
+  gitlab_server = var.gitlab_server
 }
+
+# module "opa" {
+#   source = "./modules/opa"
+#   default_suffix = var.default_suffix
+# }

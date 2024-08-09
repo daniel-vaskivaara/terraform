@@ -15,14 +15,19 @@ variable "gitlab_runner_registration_token" {
   sensitive   = true
 }
 
+variable "gitlab_server" {
+  description = "Server address of GitLab"
+  type        = string
+}
+
 variable "idle_runner_pool_size" {
-  description = "Dedicated namespace to isolate the runners"
+  description = "Pool size for standby runners"
   type        = number
-  default     = 1
+  default     = 2
 }
 
 variable "poll_new_job_interval" {
   description = "Number of seconds to wait before polling for a new GitLab job"
   type        = number
-  default     = 3
+  default     = 5
 }

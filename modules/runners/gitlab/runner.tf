@@ -30,7 +30,7 @@ resource "helm_release" "gitlab_runner" {
 
   values = [
     <<EOF
-    gitlabUrl: https://gitlab.rootdemo.eficode.io
+    gitlabUrl: ${var.gitlab_server}
     runnerRegistrationToken: ${var.gitlab_runner_registration_token}
     runners:
       concurrent: ${var.idle_runner_pool_size}
@@ -103,7 +103,7 @@ resource "kubernetes_deployment" "gitlab_runner_pool" {
 
           env {
             name  = "CI_SERVER_URL"
-            value = "https://gitlab.rootdemo.eficode.io"
+            value = var.gitlab_server
           }
 
           env {
@@ -125,6 +125,34 @@ resource "kubernetes_deployment" "gitlab_runner_pool" {
             name  = "KUBERNETES_NAMESPACE"
             value = kubernetes_namespace.gitlab_runners.metadata[0].name
           }
+        }
+      }
+    }
+  }
+}
+
+resource "kubernetes_horizontal_pod_autoscaler_v2" "gitlab_runner_hpa" {
+  metadata {
+    name      = "gitlab-runner-hpa"
+    namespace = kubernetes_namespace.gitlab_runners.metadata[0].name
+  }
+  spec {
+    scale_target_ref {
+      api_version = "apps/v1"
+      kind        = "Deployment"
+      name        = kubernetes_deployment.gitlab_runner_pool.metadata[0].name
+    }
+
+    min_replicas = 1
+    max_replicas = 5
+
+    metric {
+      type = "Resource"
+      resource {
+        name   = "cpu"
+        target {
+          type    = "Utilization"
+          average_utilization = 80
         }
       }
     }
